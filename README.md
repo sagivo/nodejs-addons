@@ -125,4 +125,4 @@ console.log(addon.hello('Sam')); // will print "Hello Sam"
 ```
 
 That's it, this is the basic of working with c++ and node together using addons.  
-Once again, The code can sample can be found at my GitHub repo.
+Once again, The code can sample can be found at my [GitHub repo](https://github.com/sagivo/nodejs-addons).
