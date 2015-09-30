@@ -66,19 +66,17 @@ Next, let's create a `binding.gyp` file with instructions to be used by the node
 }
 ```
 
-Here we can set the name and source of the addon. There're many other params [you can configure in this library](https://github.com/nodejs/node-gyp#the-bindinggyp-file). 
+Here we can set the name and source of the addon we have.  
+There are many other params [you can configure in this file](https://github.com/nodejs/node-gyp#the-bindinggyp-file). 
 
 ## Makefile
+Create a `Makefile` file that specify the build instructions.:  
 
 ```
-//Makefile
-
 all: build
 build: build_node
 build_node: node-gyp rebuild
 ```
-
-In the makefile we specify the build instructions. 
 
 ## JS code
 Now all we have left is to do is to compile the code and import it to node. In order to compile a simple `npm install` can do. This will call `node-gyp rebuild` on our native code (we can also call it ourself manually) and output the result as a binary compiled node file to `build/Release/addon.node`. Now let's call it from our app:
