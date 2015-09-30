@@ -124,5 +124,52 @@ var addon = require('./build/Release/addon');
 console.log(addon.hello('Sam')); // will print "Hello Sam"
 ```
 
+# Memory leaks 
+Yes, once we write in c++ we can forget about gc and need to do everything ourselves. Nan (or v8) can handle it for us in case we declare new object of type `Local` but in case we allocate new objects we have to remember to free the memory. 
+
+## Buffers
+A good example of bug that may happen is the use of buffer. Let's assume you have a function that generate a buffer and returns it to node:  
+
+```cpp
+void GetBuffer(const FunctionCallbackInfo<Value>& args) {
+  char *data;
+  size_t length;
+  GetSomeBufferData(data, length);
+  MaybeLocal<Object> buffer = Nan::NewBuffer(data, length);
+  args.GetReturnValue().Set(buffer.ToLocalChecked());
+}
+```
+
+This code can create a memory leak as explained [here](https://github.com/nodejs/nan/blob/master/doc/buffers.md#api_nan_new_buffer):
+> Note that when creating a Buffer using Nan::NewBuffer() and an existing char*, it is assumed that the ownership of the pointer is being transferred to the new Buffer for management. When a node::Buffer instance is garbage collected and a FreeCallback has not been specified, data will be disposed of via a call to free(). You must not free the memory space manually once you have created a Buffer in this way.  
+Using `Nan::NewBuffer` will not free the char* from memory so you will have to do it yourself. The problem is that by adding `delete []data` you're getting into a race condition - the data can be deleted from the buffer before returning to node.
+The solution in this case will be to use [`Nan::CopyBuffer`](https://github.com/nodejs/nan/blob/master/doc/buffers.md#nancopybuffer) instead:  
+
+```cpp
+void GetBuffer(const FunctionCallbackInfo<Value>& args) {
+  char *data;
+  size_t length;
+  GetSomeBufferData(data, length);
+  MaybeLocal<Object> buffer = Nan::CopyBuffer(data, length);
+  delete []data;
+  args.GetReturnValue().Set(buffer.ToLocalChecked());
+}
+```
+
+It might be a bit slower since we call `memcpy()` to create a new instance of the buffer but this way you can remove your `char*` and avoid memory leaks or race conditions.  
+
+## Upgrading to onde 4.x
+We at [Brewster](https://brewster.com) needed to upgrade an old codebase to a newer node version.  
+This upgrade was not as trivial as we wanted since the new 4.x node uses the new v8 engine that introduced a lot of [api changes](https://docs.google.com/document/d/1g8JFi8T_oAE_7uAri7Njtig7fKaPDfotU6huOa1alds/edit):  
+- Introduction of MaybeLocal<> and Maybe<> APIs
+- Force explicit Isolate* parameter on all external APIs
+- Deprecate unused Map/Set FromArray factory methods
+- Deprecate v8::Handle
+- NanNew -> Nan::New
+
+And [much more changes](https://nodesource.com/blog/cpp-addons-for-nodejs-v4). Also, we needed to upgrade our gcc compiler to version 4.8 and up in order to compile the new v8. 
+I suggest reading through the v8 and nan docs in order to see what are the main point you need to address once upgrading. 
+
+
 That's it, this is the basic of working with c++ and node together using addons.  
 Once again, The code can sample can be found at my [GitHub repo](https://github.com/sagivo/nodejs-addons).
