@@ -1,5 +1,5 @@
-Sometimes you want to use your existing c++ code directly from your node app.&nbsp;
-
+# Node.js Addons
+Sometimes you want to use your existing c++ code directly from your node app.  
 You can do it using Node.js addons, [nan](https://github.com/nodejs/nan) and [node-gym](https://github.com/nodejs/node-gyp) library. 
 
 ## C++ code
