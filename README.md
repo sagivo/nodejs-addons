@@ -29,7 +29,7 @@ namespace demo {
 }
 ```
 
-This will create a simple c++ program. The first thing you can notice is that we are importing bunch of `v8` libreries. As you know, v8 is the engine that powers node behind the sceans and we will talk more about better approaches to this later.  
+This will create a simple c++ program. The first thing you can notice is that we are importing bunch of `v8` libreries. As you know, v8 is the engine that powers node behind the scenes and we will talk more about better approaches to this later.  
 `NODE_MODULE(addon, init)` is your entry point. The addon will be under the `addon` namespace and will first call the `init` function. 
 
 ```cpp
@@ -90,11 +90,11 @@ console.log(addon.hello()); // will print 'world'
 ```
 And that's it! We just made our first native call from node. 
 
-# Advance use
+# Advanced use
 
 Node is moving fast, also the underline v8 engine. This is why it is best to get some use of the [nan](https://github.com/nodejs/nan) npm library. The idea behind is to support a unify wrapper on top of the v8 engine so your native calls will be v8 version agnostic.  
 Most of the calls will have similar signiture and this way we won't need to change the compiled version any time there's a new one.  
-Let's look on a slightly more advance sample- the first change we will need is to add this code to the `binding.gyp` file under `targets`:
+Let's look on a slightly more advanced sample- the first change we will need is to add this code to the `binding.gyp` file under `targets`:
 
 ```json
 "include_dirs" : ["<!(node -e \"require('nan')\")"]
@@ -118,7 +118,7 @@ void Method(const FunctionCallbackInfo<Value>& args) {
 }
 ```
 
-This time we will send a param from node.js to the c++ code. The way we do it is using the `args` in the functions' signiture.  
+This time we will send a param from node.js to the c++ code. The way we do it is using the `args` in the functions' signature.  
 Notice that this time we're using [`Nan::New`](https://github.com/nodejs/nan/blob/master/doc/new.md#nannew) that returns `v8::Local` object.
 
 From the node side, let's call it with a parameter this time:  
@@ -163,7 +163,7 @@ void GetBuffer(const FunctionCallbackInfo<Value>& args) {
 
 It might be a bit slower since we call `memcpy()` to create a new instance of the buffer but this way you can remove your `char*` and avoid memory leaks or race conditions.  
 
-## Upgrading to onde 4.x
+## Upgrading to Node 4.x
 We at [Brewster](https://brewster.com) needed to upgrade an old codebase to a newer node version.  
 This upgrade was not as trivial as we wanted since the new 4.x node uses the new v8 engine that introduced a lot of [api changes](https://docs.google.com/document/d/1g8JFi8T_oAE_7uAri7Njtig7fKaPDfotU6huOa1alds/edit):  
 - Introduction of `MaybeLocal<>` and `Maybe<>` APIs
