@@ -162,11 +162,11 @@ It might be a bit slower since we call `memcpy()` to create a new instance of th
 ## Upgrading to onde 4.x
 We at [Brewster](https://brewster.com) needed to upgrade an old codebase to a newer node version.  
 This upgrade was not as trivial as we wanted since the new 4.x node uses the new v8 engine that introduced a lot of [api changes](https://docs.google.com/document/d/1g8JFi8T_oAE_7uAri7Njtig7fKaPDfotU6huOa1alds/edit):  
-- Introduction of MaybeLocal<> and Maybe<> APIs
+- Introduction of `MaybeLocal<>` and `Maybe<>` APIs
 - Force explicit Isolate* parameter on all external APIs
 - Deprecate unused Map/Set FromArray factory methods
-- Deprecate v8::Handle
-- NanNew -> Nan::New
+- Deprecate `v8::Handle`
+- `NanNew` -> `Nan::New`
 
 And [much more changes](https://nodesource.com/blog/cpp-addons-for-nodejs-v4). Also, we needed to upgrade our gcc compiler to version 4.8 and up in order to compile the new v8. 
 I suggest reading through the v8 and nan docs in order to see what are the main point you need to address once upgrading. 
