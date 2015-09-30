@@ -92,8 +92,8 @@ And that's it! We just made our first native call from node.
 # Advance use
 
 Node is moving fast, also the underline v8 engine. This is why it is best to get some use of the [nan](https://github.com/nodejs/nan) npm library. The idea behind is to support a unify wrapper on top of the v8 engine so your native calls will be v8 version agnostic.  
-Most of the calls will have similar signiture and this way we won't need to change the compiled version any time there's a new one. 
-Let's look on a slightly more advance sample. The first change we will need is to add this code to the `binding.gyp` file under `targets`:
+Most of the calls will have similar signiture and this way we won't need to change the compiled version any time there's a new one.  
+Let's look on a slightly more advance sample- the first change we will need is to add this code to the `binding.gyp` file under `targets`:
 
 ```json
 "include_dirs" : ["<!(node -e \"require('nan')\")"]
@@ -145,8 +145,8 @@ void GetBuffer(const FunctionCallbackInfo<Value>& args) {
 
 This code can create a memory leak as explained [here](https://github.com/nodejs/nan/blob/master/doc/buffers.md#api_nan_new_buffer):
 > Note that when creating a Buffer using Nan::NewBuffer() and an existing char*, it is assumed that the ownership of the pointer is being transferred to the new Buffer for management. When a node::Buffer instance is garbage collected and a FreeCallback has not been specified, data will be disposed of via a call to free(). You must not free the memory space manually once you have created a Buffer in this way.  
-Using `Nan::NewBuffer` will not free the char* from memory so you will have to do it yourself. The problem is that by adding `delete []data` you're getting into a race condition - the data can be deleted from the buffer before returning to node.  
 
+Using `Nan::NewBuffer` will not free the char* from memory so you will have to do it yourself. The problem is that by adding `delete []data` you're getting into a race condition - the data can be deleted from the buffer before returning to node.  
 The solution in this case will be to use [`Nan::CopyBuffer`](https://github.com/nodejs/nan/blob/master/doc/buffers.md#nancopybuffer) instead:  
 
 ```cpp
