@@ -37,7 +37,9 @@ void init(Local<Object> exports) {
 }
 ```
 
-here we are getting a `local` object as param and declaring a new method called `hello`. A [local](http://izs.me/v8-docs/classv8_1_1Local.html) type is managed by the v8 Engine. We bind the `hello` command to the `Method` method. 
+here we are getting a `Local` object as param and declaring a new method called `hello`.  
+A [Local](http://izs.me/v8-docs/classv8_1_1Local.html) type is managed by the v8 Engine.  
+Next, we bind the `hello` command to the `Method` method:  
 
 ```cpp
 void Method(const FunctionCallbackInfo<Value>& args) {
