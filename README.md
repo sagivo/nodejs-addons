@@ -52,11 +52,10 @@ This method will be called when the node will call `hello`. Here we are getting 
 
 
 ## binding.gyp
-Next, let's create a file with instructions to be used by the node-gyp library:
+Next, let's create a `binding.gyp` file with instructions to be used by the node-gyp library:
 
 
 ```json
-#binding.gyp
 {
   "targets": [
     {
