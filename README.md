@@ -70,7 +70,7 @@ Here we can set the name and source of the addon we have.
 There are many other params [you can configure in this file](https://github.com/nodejs/node-gyp#the-bindinggyp-file). 
 
 ## Makefile
-Create a `Makefile` file that specify the build instructions.:  
+Create a `Makefile` file that specify the build instructions:  
 
 ```
 all: build
@@ -79,7 +79,9 @@ build_node: node-gyp rebuild
 ```
 
 ## JS code
-Now all we have left is to do is to compile the code and import it to node. In order to compile a simple `npm install` can do. This will call `node-gyp rebuild` on our native code (we can also call it ourself manually) and output the result as a binary compiled node file to `build/Release/addon.node`. Now let's call it from our app:
+Now, all we have left is to do is to compile the code and import it to node.  
+We can just use `npm install` to do it. This will call `node-gyp rebuild` on our native code (we can also call it ourself manually) and output the result as a binary compiled node file to `build/Release/addon.node`.  
+The next step is to import it from our node app:
 
 ```javascript
 var addon = require('./build/Release/addon');
@@ -89,7 +91,8 @@ And that's it! We just made our first native call from node.
 
 # Advance use
 
-Node is moving fast, also the underlyne v8 engine. This is why it is best to get some use of the [nan](https://github.com/nodejs/nan) npm library. The idea behind is to support a unify wrapper on top of the v8 engine so your native calls will be v8 version egnostic. Most of the calls will have similar signiture and this way we won't need to change the compiled version any time there's a new one. 
+Node is moving fast, also the underline v8 engine. This is why it is best to get some use of the [nan](https://github.com/nodejs/nan) npm library. The idea behind is to support a unify wrapper on top of the v8 engine so your native calls will be v8 version agnostic.  
+Most of the calls will have similar signiture and this way we won't need to change the compiled version any time there's a new one. 
 Let's look on a slightly more advance sample. The first change we will need is to add this code to the `binding.gyp` file under `targets`:
 
 ```json
