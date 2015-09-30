@@ -3,7 +3,7 @@ Sometimes you want to use your existing c++ code directly from your node app.&nb
 You can do it using Node.js addons, [nan](https://github.com/nodejs/nan) and [node-gym](https://github.com/nodejs/node-gyp) library. 
 
 ## C++ code
-```
+```cpp
 // hello.cc
 #include <node.h>
 
@@ -30,13 +30,16 @@ namespace demo {
 
 This will create a simple c++ program. The first thing you can notice is we are importing bunch of `v8` libreries. As you know, v8 is the engine that powers node behind the sceans and we will talk more about better approaches to this later. 
 `NODE_MODULE(addon, init)` is your entry point of this file. The addon will be under the `addon` namespace and will first call the `init` function. 
-```
+
+```cpp
 void init(Local<Object> exports) {
   NODE_SET_METHOD(exports, "hello", Method);
 }
 ```
+
 here we are getting a `local` object as param and declaring a new method called `hello`. A [local](http://izs.me/v8-docs/classv8_1_1Local.html) type is managed by the v8 Engine. We bind the `hello` command to the `Method` method. 
-```
+
+```cpp
 void Method(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = args.GetIsolate();
   args.GetReturnValue().Set(String::NewFromUtf8(isolate, "world"));
@@ -50,7 +53,7 @@ This method will be called when the node will call `hello`. Here we are getting 
 Now let's create a file if instructions for the node-gyp library:
 
 
-```
+```json
 {
   "targets": [
     {
@@ -78,7 +81,7 @@ In the makefile we specify the build instructions.
 ## JS code
 Now all we have left is to do is to compile the code and import it to node. In order to compile a simple `npm install` can do. This will call `node-gyp rebuild` on our native code (we can also call it ourself manually) and output the result as a binary compiled node file to `build/Release/addon.node`. Now let's call it from our app:
 
-```
+```javascript
 var addon = require('./build/Release/addon');
 console.log(addon.hello()); // will print 'world'
 ```
@@ -89,19 +92,19 @@ And that's it! We just made our first native call from node.
 Node is moving fast, also the underlyne v8 engine. This is why it is best to get some use of the [nan](https://github.com/nodejs/nan) npm library. The idea behind is to support a unify wrapper on top of the v8 engine so your native calls will be v8 version egnostic. Most of the calls will have similar signiture and this way we won't need to change the compiled version any time there's a new one. 
 Let's look on a slightly more advance sample. The first change we will need is to add this code to the `binding.gyp` file under `targets`:
 
-```
+```json
 "include_dirs" : ["<!(node -e \"require('nan')\")"]
 ```
 
 After installing nan, we need to import it by adding this line at the head of `hello.cc`:  
 
-```c
+```cpp
 #include <nan.h>
 ```
 
 Now, let's change our `Method` function a bit:
 
-```
+```cpp
 void Method(const FunctionCallbackInfo<Value>& args) {
   v8::String::Utf8Value nameFromArgs(args[0]->ToString());
   std::string name = std::string(*nameFromArgs);
