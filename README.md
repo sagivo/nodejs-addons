@@ -48,14 +48,15 @@ void Method(const FunctionCallbackInfo<Value>& args) {
 }
 ```
 
-This method will be called when the node will call `hello`. Here we are getting the current `Isolate` data and seting the return value to `world`.
+This method will be called when the node will call `hello`. Here we are getting the current `Isolate` data and setting the return value to be `world`.
 
 
 ## binding.gyp
-Now let's create a file if instructions for the node-gyp library:
+Next, let's create a file with instructions to be used by the node-gyp library:
 
 
 ```json
+//binding.gyp
 {
   "targets": [
     {
