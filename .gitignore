@@ -1,0 +1,11 @@
+*.swp
+*.swo
+
+npm-debug.log
+node_modules
+
+build/
+examples/**/results
+examples/cpp/ex
+
+.DS_Store

@@ -1,0 +1,11 @@
+{
+  "main": "./build/Release/hello",
+  "name": "blip",
+  "version": "0.0.1",
+  "scripts": {
+    "install": "node-gyp rebuild"
+  },
+  "dependencies": {
+    "nan": "*"
+  }
+}
