@@ -28,8 +28,8 @@ namespace demo {
 }
 ```
 
-This will create a simple c++ program. The first thing you can notice is we are importing bunch of `v8` libreries. As you know, v8 is the engine that powers node behind the sceans and we will talk more about better approaches to this later. 
-`NODE_MODULE(addon, init)` is your entry point of this file. The addon will be under the `addon` namespace and will first call the `init` function. 
+This will create a simple c++ program. The first thing you can notice is that we are importing bunch of `v8` libreries. As you know, v8 is the engine that powers node behind the sceans and we will talk more about better approaches to this later.  
+`NODE_MODULE(addon, init)` is your entry point. The addon will be under the `addon` namespace and will first call the `init` function. 
 
 ```cpp
 void init(Local<Object> exports) {
