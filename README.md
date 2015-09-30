@@ -56,7 +56,7 @@ Next, let's create a file with instructions to be used by the node-gyp library:
 
 
 ```json
-//binding.gyp
+#binding.gyp
 {
   "targets": [
     {
