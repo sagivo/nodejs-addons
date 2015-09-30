@@ -142,7 +142,7 @@ void GetBuffer(const FunctionCallbackInfo<Value>& args) {
 
 This code can create a memory leak as explained [here](https://github.com/nodejs/nan/blob/master/doc/buffers.md#api_nan_new_buffer):
 > Note that when creating a Buffer using Nan::NewBuffer() and an existing char*, it is assumed that the ownership of the pointer is being transferred to the new Buffer for management. When a node::Buffer instance is garbage collected and a FreeCallback has not been specified, data will be disposed of via a call to free(). You must not free the memory space manually once you have created a Buffer in this way.  
-Using `Nan::NewBuffer` will not free the char* from memory so you will have to do it yourself. The problem is that by adding `delete []data` you're getting into a race condition - the data can be deleted from the buffer before returning to node.
+Using `Nan::NewBuffer` will not free the char* from memory so you will have to do it yourself. The problem is that by adding `delete []data` you're getting into a race condition - the data can be deleted from the buffer before returning to node.  
 The solution in this case will be to use [`Nan::CopyBuffer`](https://github.com/nodejs/nan/blob/master/doc/buffers.md#nancopybuffer) instead:  
 
 ```cpp
