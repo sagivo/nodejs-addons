@@ -1,4 +1,5 @@
 # Node.js Addons
+(full repo can be found [here](https://github.com/sagivo/nodejs-addons))
 Sometimes you want to use your existing c++ code directly from your node app.  
 You can do it using Node.js addons, [nan](https://github.com/nodejs/nan) and [node-gym](https://github.com/nodejs/node-gyp) library. 
 
